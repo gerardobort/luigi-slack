@@ -94,7 +94,7 @@ class DownloadSlackChannelHistory(luigi.Task):
                     message["ts"],
                     message.get("user"),
                     message.get("is_starred"),
-                    message.get("text").encode('ascii', 'ignore').replace("\n", "\\n"),
+                    message.get("text").encode('ascii', 'ignore').replace("\n", "\\n").replace("\t", "\\t"),
                 )
                 print(*info, file=outfile, sep='\t')
 
