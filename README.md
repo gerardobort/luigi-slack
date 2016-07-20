@@ -15,6 +15,8 @@ Luigi tasks for Slack conversations ingestion, usfeul for NLP conversational tra
 
 ```$ export PYTHONPATH=''```
 
+```export SLACK_CLIENT_TOKEN="xoxp-1234567-12345678..............."```
+
 ```$ luigi --module tasks  --help-all```
 
 ```$ luigi --module tasks  DownloadSlackChannelHistory --DownloadSlackChannelHistory-channel-name "general"```
