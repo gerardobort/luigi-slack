@@ -21,7 +21,7 @@ This first source code will help you to extract an entire conversation from a Sl
 
 ```$ export PYTHONPATH=''```
 
-```$ export SLACK_CLIENT_TOKEN="xoxp-1234567-12345678..............."```
+```$ export SLACK_CLIENT_TOKEN="xoxp-1234567-12345678..............."``` (get your token from https://api.slack.com/web#authentication)
 
 ```$ luigi --module tasks  --help-all```
 
