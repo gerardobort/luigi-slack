@@ -21,7 +21,7 @@ class GenerateChatterbotCorpusFromSlackChannel(luigi.Task):
         with self.input().open('r') as infile:
             messages = [line.strip().split('\t')[-1:][0] for line in infile]
             messages.reverse()
-            corpus["conversations"] = messages
+            corpus["conversations"] = [messages]
 
         with self.output().open('w') as outfile:
             json.dump(corpus, outfile, sort_keys=True, indent=4, separators=(',', ': '))
