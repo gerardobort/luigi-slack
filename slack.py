@@ -15,7 +15,7 @@ def slackMessageToTsvLine(message):
         message.get("ts"),
         message.get("user"),
         message.get("is_starred"),
-        message.get("text")
+        (message.get("text") or "")
             .encode('ascii', 'ignore')
             .replace("\n", "\\n")
             .replace("\t", "\\t"),
