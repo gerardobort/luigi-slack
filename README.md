@@ -31,3 +31,10 @@ This first source code will help you to extract an entire conversation from a Sl
 
 ![](https://github.com/gerardobort/luigi-slack/blob/master/doc/luigid-preview.png)
 ![](https://github.com/gerardobort/luigi-slack/blob/master/doc/luigid-preview2.png)
+
+#### Generate Chatterbot corpus from a Slack Channel
+
+@see Chatterbot project here: https://github.com/gunthercox/ChatterBot
+
+```$ luigi --module tasks GenerateChatterbotCorpusFromSlackChannel --GenerateChatterbotCorpusFromSlackChannel-channel-name "general"```
+
