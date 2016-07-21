@@ -17,11 +17,17 @@ This first source code will help you to extract an entire conversation from a Sl
 
 ### Run Tasks
 
+#### Setup config / help
+
 ```$ export PYTHONPATH=''```
 
-```export SLACK_CLIENT_TOKEN="xoxp-1234567-12345678..............."```
+```$ export SLACK_CLIENT_TOKEN="xoxp-1234567-12345678..............."``` (get your token from https://api.slack.com/web#authentication)
 
 ```$ luigi --module tasks  --help-all```
 
+#### Extract Full Channel History in .tsv format
+
 ```$ luigi --module tasks  DownloadSlackChannelHistory --DownloadSlackChannelHistory-channel-name "general"```
 
+![](https://github.com/gerardobort/luigi-slack/blob/master/doc/luigid-preview.png)
+![](https://github.com/gerardobort/luigi-slack/blob/master/doc/luigid-preview2.png)
