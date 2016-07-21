@@ -18,6 +18,7 @@ def mourn_failure(task, exception):
     print("OUGH! :(")
 
 from slack import *
+from chatterbot import *
 
 if __name__ == "__main__":
     luigi.run()

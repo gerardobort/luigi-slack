@@ -99,24 +99,3 @@ class DownloadSlackChannelHistory(luigi.Task):
     def output(self):
         return luigi.LocalTarget(self.date.strftime('data/Slack/ChannelHistory/' + self.channel_name + '_%Y-%m-%d.tsv'))
 
-
-## WIP - conversations have to be sampled by date, topic or something else
-class GenerateChatterbotCorpusFromSlackChannel(luigi.Task):
-
-    channel_name = luigi.Parameter()
-    date = luigi.DateParameter(default=datetime.date.today())
-
-    def requires(self):
-        return DownloadSlackChannelHistory(date=self.date, channel_name=self.channel_name)
-
-    def run(self):
-
-        corpus = { "conversations": [] }
-        with self.input().open('r') as infile:
-            corpus["conversations"] = [line.strip().split('\t')[-1:][0] for line in infile]
-
-        with self.output().open('w') as outfile:
-            json.dump(corpus, outfile, sort_keys=True, indent=4, separators=(',', ': '))
-
-    def output(self):
-        return luigi.LocalTarget(self.date.strftime('data/Chatterbot/Corpus/' + self.channel_name + '_%Y-%m-%d.json'))
