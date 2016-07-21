@@ -9,7 +9,7 @@ This first source code will help you to extract an entire conversation from a Sl
 
 ### Installation
 
-```$ pip install luigi```
+```$ pip install luigi slackclient```
 
 ```$ luigid```
 

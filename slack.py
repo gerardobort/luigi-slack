@@ -7,6 +7,20 @@ import re
 import os
 from slackclient import SlackClient
 
+def slackMessageToTsvLine(message):
+    if (not message):
+        return ("type", "ts", "user", "is_starred", "text")
+    return (
+        message.get("type"),
+        message.get("ts"),
+        message.get("user"),
+        message.get("is_starred"),
+        message.get("text")
+            .encode('ascii', 'ignore')
+            .replace("\n", "\\n")
+            .replace("\t", "\\t"),
+    )
+    
 
 class DownloadSlackChannelHistoryChunk(luigi.Task):
 
@@ -60,43 +74,26 @@ class DownloadSlackChannelHistory(luigi.Task):
         if (0 == channel_id):
             raise Exception('Unable to find such channel by name', 'channel_name=' + self.channel_name)
 
-        messages = []
+        with self.output().open('w') as outfile:
+            print(*slackMessageToTsvLine(False), file=outfile, sep='\t')
 
-        # Get the first chunk
-        last_message_id = 0
-        taskOutput = yield DownloadSlackChannelHistoryChunk(channel_name=self.channel_name)
-        with taskOutput.open('r') as infile:
-            last_chunk = json.load(infile)
-            last_message_id = last_chunk["messages"][0]["ts"] # TODO check 4 failures
-            messages += last_chunk["messages"]
-
-        # Get more chunks
-        while (last_chunk["has_more"]):
-            taskOutput = yield DownloadSlackChannelHistoryChunk(channel_name=self.channel_name, last_message_id=last_message_id)
+            # Get the first chunk
+            last_message_id = 0
+            taskOutput = yield DownloadSlackChannelHistoryChunk(channel_name=self.channel_name)
             with taskOutput.open('r') as infile:
                 last_chunk = json.load(infile)
-                last_message_id = last_chunk["messages"][0]["ts"] # TODO check 4 failures
-                messages += last_chunk["messages"]
+                last_message_id = last_chunk["messages"][-1:][0]["ts"] # TODO check 4 failures
+                for message in last_chunk["messages"]:
+                    print(*slackMessageToTsvLine(message), file=outfile, sep='\t')
 
-        messages.reverse()
-        with self.output().open('w') as outfile:
-            info = (
-                "type",
-                "ts",
-                "user",
-                "is_starred",
-                "text",
-            )
-            print(*info, file=outfile, sep='\t')
-            for message in messages:
-                info = (
-                    message["type"],
-                    message["ts"],
-                    message.get("user"),
-                    message.get("is_starred"),
-                    message.get("text").encode('ascii', 'ignore').replace("\n", "\\n").replace("\t", "\\t"),
-                )
-                print(*info, file=outfile, sep='\t')
+            # Get more chunks
+            while (last_chunk["has_more"]):
+                taskOutput = yield DownloadSlackChannelHistoryChunk(channel_name=self.channel_name, last_message_id=last_message_id)
+                with taskOutput.open('r') as infile:
+                    last_chunk = json.load(infile)
+                    last_message_id = last_chunk["messages"][-1:][0]["ts"] # TODO check 4 failures
+                for message in last_chunk["messages"]:
+                    print(*slackMessageToTsvLine(message), file=outfile, sep='\t')
 
 
     def output(self):
